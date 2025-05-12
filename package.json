@@ -33,5 +33,10 @@
     "prisma": "^6.7.0",
     "tailwindcss": "^3.3.0",
     "typescript": "^5"
-  }
+  },
+  "description": "A Next.js application that aggregates news from multiple sources (Economic Times, NDTV, CNN, BBC, MoneyControl, The Hindu, and Times of India) and displays them in real-time with keyword filtering.",
+  "main": "postcss.config.js",
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
 }

@@ -17,83 +17,64 @@ export interface NewsSource {
   keywords: string[];
 }
 
-// Single array of keywords to be used across all news sources
+// Keywords that should NOT appear in relevant news
+export const EXCLUDED_KEYWORDS = [
+  // Entertainment
+  'bollywood', 'movie', 'film', 'actor', 'actress', 'celebrity', 'entertainment',
+  'music', 'song', 'album', 'concert', 'performance', 'show', 'reality show',
+  
+  // Sports
+  'cricket', 'football', 'soccer', 'hockey', 'tennis', 'sports', 'match',
+  'tournament', 'championship', 'league', 'player', 'team', 'coach',
+  
+  // Business & Economy
+  'stock market', 'share market', 'sensex', 'nifty', 'trading', 'investment',
+  'business', 'economy', 'market', 'stock', 'share', 'profit', 'loss',
+  
+  // General Exclusions
+  'weather', 'forecast', 'climate', 'temperature', 'rain', 'flood',
+  'education', 'school', 'college', 'university', 'exam', 'result',
+  'technology', 'gadget', 'mobile', 'phone', 'computer', 'software',
+  'health', 'medical', 'hospital', 'doctor', 'patient', 'disease',
+  'lifestyle', 'fashion', 'beauty', 'food', 'recipe', 'cooking'
+];
+
 export const NEWS_KEYWORDS = [
-  // Military & Defense
-  'military', 'army', 'navy', 'air force', 'defense', 'armed forces', 'paramilitary',
-  'battle', 'war', 'conflict', 'combat', 'operation', 'mission', 'deployment',
-  'soldier', 'troops', 'personnel', 'martyr', 'casualty', 'wounded', 'injured',
-  'weapon', 'artillery', 'missile', 'drone', 'aircraft', 'tank', 'submarine',
-  'nuclear', 'atomic', 'strategic', 'tactical', 'offensive', 'defensive', 'explosion', 'panic', 'security', 'coast',
-  'terrorist', 'militant', 'militancy', 'insurgency', 'separatist', 'jihad', 'proxy war',
+  // India-Pakistan Specific (Primary Terms)
+  'india pakistan conflict', 'india pakistan border', 'india pakistan tension',
+  'indian pakistani forces', 'indian pakistani military', 'indian pakistani army',
+  'loc', 'line of control', 'international border', 'ceasefire line',
+  'jammu kashmir conflict', 'pok', 'pakistan occupied kashmir',
   
+  // Military Actions (Secondary Terms)
+  'ceasefire violation', 'border skirmish', 'cross border firing', 'shelling',
+  'artillery fire', 'mortar shelling', 'bombardment', 'retaliatory fire',
+  'military operation', 'surgical strike', 'counter terrorism operation',
+  'terrorist attack', 'militant attack', 'infiltration attempt',
   
-  // Border & LOC
-  'border', 'loc', 'line of control', 'international border', 'ceasefire line',
-  'violation', 'breach', 'infiltration', 'intrusion', 'cross border',
-  'shelling', 'firing', 'artillery', 'mortar', 'grenade', 'bombardment',
-  'bunker', 'post', 'outpost', 'checkpoint', 'patrol', 'surveillance',
+  // Key Locations (Tertiary Terms)
+  'jammu', 'srinagar', 'muzaffarabad', 'skardu', 'gilgit',
+  'punjab border', 'rajasthan border', 'gujarat border',
   
-  // Kashmir Related
-  'kashmir', 'jammu', 'pok', 'pakistan occupied kashmir', 'gilgit', 'baltistan',
-  'article 370', 'special status', 'autonomy', 'statehood', 'union territory',
-  'kashmiri', 'kashmiris', 'pandit', 'minority', 'migration', 'displacement',
+  // Military Units (Tertiary Terms)
+  'border security force', 'bsf', 'pakistan rangers', 'pakistan army',
+  'indian army', 'indian air force', 'pakistan air force',
   
-  // Terrorism & Security
-  'terrorism', 'terrorist', 'militant', 'militancy', 'insurgency', 'separatist',
-  'attack', 'ambush', 'encounter', 'raid', 'operation', 'crackdown',
-  'isi', 'raw', 'intelligence', 'espionage', 'surveillance', 'interception',
-  'radical', 'extremist', 'jihad', 'proxy war', 'sleeper cell',
+  // Diplomatic Terms (Tertiary Terms)
+  'ceasefire agreement', 'peace talks', 'dialogue', 'de-escalation',
+  'foreign secretary talks', 'high commissioner', 'diplomatic tension',
   
-  // Diplomatic & Political
-  'diplomatic', 'diplomacy', 'foreign policy', 'external affairs',
-  'modi', 'sharif', 'imran khan', 'shah', 'foreign minister',
-  'talks', 'negotiation', 'summit', 'meeting', 'dialogue',
-  'peace', 'treaty', 'agreement', 'ceasefire', 'de-escalation',
-  'sanctions', 'aid', 'assistance', 'support', 'alliance',
-  'diplomat', 'ambassador', 'consulate', 'embassy', 'high commission',
-  'bilateral', 'multilateral', 'international relations', 'foreign relations',
-  'state visit', 'official visit', 'delegation', 'delegates', 'representatives',
+  // Key Figures (Tertiary Terms)
+  'modi', 'sharif', 'imran khan', 'jaishankar', 'bajwa', 'munir',
+  'rawat', 'naravane', 'chauhan', 'asif', 'qureshi',
   
-  // Political Figures
-  'trump', 'biden', 'putin', 'xi jinping', 'erdogan', 'macron',
-  'jaishankar', 'blinken', 'guterres', 'boris johnson', 'sunak',
-  'raheel sharif', 'bajwa', 'munir', 'asif', 'qureshi',
-  'rajnath singh', 'doval', 'rawat', 'naravane', 'chauhan',
+  // Incidents (Secondary Terms)
+  'cross border terrorism', 'proxy war', 'sleeper cell',
+  'drone attack', 'radar detection', 'airspace violation',
   
-  // Countries & Regions
-  'pakistan', 'pak', 'india', 'china', 'russia', 'usa', 'united states',
-  'uk', 'britain', 'france', 'germany', 'turkey', 'saudi arabia',
-  'uae', 'qatar', 'iran', 'afghanistan', 'bangladesh', 'nepal',
-  'sri lanka', 'bhutan', 'myanmar', 'central asia', 'south asia',
-  'middle east', 'gulf', 'europe', 'asia', 'america',
-  
-  // International Response
-  'un', 'united nations', 'security council', 'international',
-  'us', 'america', 'china', 'russia', 'global', 'world',
-  'mediation', 'intervention', 'peacekeeping', 'resolution',
-  'nato', 'european union', 'eu', 'g20', 'g7', 'brics',
-  'saarc', 'sco', 'oic', 'arab league', 'gcc',
-  
-  // Regional
-  'punjab', 'sindh', 'balochistan', 'gilgit', 'baltistan',
-  'ladakh', 'jammu', 'srinagar', 'bordering', 'frontier',
-  'khyber pakhtunkhwa', 'fata', 'tribal areas', 'northern areas',
-  'azad kashmir', 'muzaffarabad', 'mirpur', 'skardu', 'hunza',
-  
-  // Humanitarian
-  'civilian', 'refugee', 'displaced', 'migration', 'evacuation',
-  'humanitarian', 'aid', 'relief', 'assistance', 'support',
-  'casualty', 'injury', 'damage', 'destruction', 'reconstruction',
-  'internally displaced', 'asylum', 'resettlement', 'rehabilitation',
-  
-  // Media & Information
-  'propaganda', 'disinformation', 'fake news', 'media war',
-  'press release', 'statement', 'briefing', 'update',
-  'breaking news', 'exclusive', 'report', 'analysis',
-  'correspondent', 'news agency',
-  'press conference', 'media briefing', 'official statement', 'whistleblower',  'alert', 'shut', "airport", 'strike',
-  'drone', 'radar', 'firing', 'shot'
+  // Casualties & Damage (Tertiary Terms)
+  'civilian casualty', 'military casualty', 'injured', 'wounded',
+  'damage', 'destruction', 'evacuation', 'displacement'
 ];
 
 export const NEWS_SOURCES: NewsSource[] = [

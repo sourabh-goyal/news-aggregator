@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
 import Parser from 'rss-parser';
-import { NEWS_SOURCES } from '@/types/news';
+import { NEWS_SOURCES, NEWS_KEYWORDS, EXCLUDED_KEYWORDS } from '@/types/news';
 
 const prisma = new PrismaClient();
 const parser = new Parser({
@@ -41,7 +41,37 @@ async function fetchFeedWithRetry(source: { name: string; url: string }, retryCo
 // Function to check if content is relevant
 function isContentRelevant(content: string, keywords: string[]): boolean {
   const lowerContent = content.toLowerCase();
-  return keywords.some(keyword => lowerContent.includes(keyword.toLowerCase()));
+  
+  // First check for excluded keywords - if any are found, article is not relevant
+  if (EXCLUDED_KEYWORDS.some(keyword => lowerContent.includes(keyword.toLowerCase()))) {
+    return false;
+  }
+  
+  // Must contain at least one primary term (India-Pakistan specific)
+  const primaryTerms = [
+    'india pakistan conflict', 'india pakistan border', 'india pakistan tension',
+    'indian pakistani forces', 'indian pakistani military', 'indian pakistani army',
+    'loc', 'line of control', 'international border', 'ceasefire line',
+    'jammu kashmir conflict', 'pok', 'pakistan occupied kashmir'
+  ];
+  const hasPrimaryContext = primaryTerms.some(term => lowerContent.includes(term));
+  
+  if (!hasPrimaryContext) {
+    return false;
+  }
+  
+  // Must also contain at least one secondary term (military/conflict related)
+  const secondaryTerms = [
+    'ceasefire violation', 'border skirmish', 'cross border firing', 'shelling',
+    'artillery fire', 'mortar shelling', 'bombardment', 'retaliatory fire',
+    'military operation', 'surgical strike', 'counter terrorism operation',
+    'terrorist attack', 'militant attack', 'infiltration attempt',
+    'cross border terrorism', 'proxy war', 'sleeper cell',
+    'drone attack', 'radar detection', 'airspace violation'
+  ];
+  const hasSecondaryContext = secondaryTerms.some(term => lowerContent.includes(term));
+  
+  return hasSecondaryContext;
 }
 
 export async function POST() {
